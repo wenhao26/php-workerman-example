@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Chats</title>
+
+    <style>
+        .main {
+            width: 900px;
+            height: 220px;
+            margin: 50px auto;
+            padding: 10px;
+        }
+
+        .online-info {
+            margin-bottom: 10px;
+        }
+
+        .count {
+            font-weight: bold;
+        }
+
+        .interact {
+            padding: 15px 10px;
+            height: 200px;
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+        }
+
+        .time {
+            font-size: 10px;
+        }
+
+        .message {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            width: 894px;
+            height: 40px;
+        }
+
+        .send-btn {
+            float: right;
+            width: 80px;
+            height: 30px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="online-info">Current number of chats:<span id="count" class="count">0</span></div>
+    <div id="interact" class="interact"></div>
+    <hr/>
+    <div class="send">
+        <textarea id="content" class="content" placeholder="Say something..."></textarea>
+        <button class="send-btn" onclick="send()">Send</button>
+    </div>
+</div>
+
+<script>
+    ws = new WebSocket('ws://127.0.0.1:2345');
+    ws.onopen = function () {
+        // let uid = 'man ho';
+        let uid = randomUsername('WH_', 5);
+        ws.send(uid);
+    }
+    ws.onmessage = function (e) {
+        let interact = document.getElementById('interact');
+        let online_count = document.getElementById('count');
+
+        console.info(e.data)
+        let data = eval('(' + e.data + ')');
+        interact.innerHTML += '<span class="time">' + data.time + '</span><span class="message">' + data.message + '</span>'
+        online_count.innerText = data.count
+
+        interact.scrollTop = interact.scrollHeight;
+    }
+
+    function send() {
+        let content = document.getElementById('content');
+        if (content.value) {
+            ws.send(content.value)
+            content.value = '';
+            content.focus();
+        }
+    }
+
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg); // 匹配目标参数
+        if (r != null) return unescape(r[2]);
+        return null; // 返回参数值
+    }
+
+    function randomUsername(prefix, randomLength) {
+        // 兼容更低版本的默认值写法
+        prefix === undefined ? prefix = "" : prefix;
+        randomLength === undefined ? randomLength = 8 : randomLength;
+
+        // 设置随机用户名
+        // 用户名随机词典数组
+        let nameArr = [
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+            ["a", "b", "c", "d", "e", "f", "g", "h", "i", "g", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+        ]
+        // 随机名字字符串
+        let name = prefix;
+        // 循环遍历从用户词典中随机抽出一个
+        for (var i = 0; i < randomLength; i++) {
+            // 随机生成index
+            let index = Math.floor(Math.random() * 2);
+            let zm = nameArr[index][Math.floor(Math.random() * nameArr[index].length)];
+            // 如果随机出的是英文字母
+            if (index === 1) {
+                // 则百分之50的概率变为大写
+                if (Math.floor(Math.random() * 2) === 1) {
+                    zm = zm.toUpperCase();
+                }
+            }
+            // 拼接进名字变量中
+            name += zm;
+        }
+        // 将随机生成的名字返回
+        return name;
+    }
+</script>
+
+</body>
+</html>

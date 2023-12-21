@@ -1,0 +1,9 @@
+2023-12-20 16:02:40 pid:1 ArgumentCountError: Too few arguments to function handleConnection(), 1 passed in D:\www\workerman\vendor\workerman\workerman\Worker.php on line 2576 and exactly 2 expected in D:\www\workerman\example\simple_chat.php:11
+Stack trace:
+#0 D:\www\workerman\vendor\workerman\workerman\Worker.php(2576): handleConnection(Object(Workerman\Connection\TcpConnection))
+#1 D:\www\workerman\vendor\workerman\workerman\Events\Select.php(311): Workerman\Worker->acceptConnection(Resource id #19)
+#2 D:\www\workerman\vendor\workerman\workerman\Worker.php(1485): Workerman\Events\Select->loop()
+#3 D:\www\workerman\vendor\workerman\workerman\Worker.php(1402): Workerman\Worker::forkWorkersForWindows()
+#4 D:\www\workerman\vendor\workerman\workerman\Worker.php(560): Workerman\Worker::forkWorkers()
+#5 D:\www\workerman\example\simple_chat.php(40): Workerman\Worker::runAll()
+#6 {main}

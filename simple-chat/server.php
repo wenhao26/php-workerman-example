@@ -13,7 +13,18 @@ function broadcast($message)
     foreach ($uidConnections as $connection) {
         $connection->send($message);
     }
+}
 
+function sendMessageByUid($uid, $message)
+{
+    global $uidConnections;
+
+    if(isset($uidConnections[$uid])) {
+        $connection = $uidConnections[$uid];
+        $connection->send($message);
+        return true;
+    }
+    return false;
 }
 
 $uidConnections = [];
